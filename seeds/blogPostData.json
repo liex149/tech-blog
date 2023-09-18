@@ -1,17 +1,17 @@
 [
     {
-      "title": "bean",
-      "description": "yum",
+      "title": "Flowers",
+      "description": "There are pleanty of flowers in the world. WHich one is your favorite?",
       "user_id": 1
     },
     {
       "title": "AI",
-      "description": "bad",
+      "description": "Is it good or bad? Tell me your reasons.",
       "user_id": 2
     },
     {
       "title": "LOL",
-      "description": "OK.",
+      "description": "LOL is a fun game to play. which one is your favorite and why?",
       "user_id": 3
     }
   ]

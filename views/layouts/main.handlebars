@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tech Blog!</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <link rel="stylesheet" href="/css/jass.css">
   <link rel="stylesheet" href="/css/style.css">
 </head>
@@ -13,15 +14,17 @@
   <div class="flex-column justify-space-around">
     <header class="display-flex justify-space-between align-center p-2">
       <h1>
-        <a href="/">Tech!</a>
+        <a href="/">TechBlog!</a>
       </h1>
       <nav>
         <!-- Conditionally render login or logout links -->
         {{#if logged_in}}
-        <a href="/profile">profile</a> |
+        <a href="/homepage">Homepage</a> |
+        <a href="/dashboard">Dashboard</a> |
         <button class="no-button" id="logout">logout</button>
         {{else}}
-        <a href="/login">login</a>
+        <a href="/login">login</a> |
+        <a href="/dashboard">Dashboard</a>
         {{/if}}
       </nav>
     </header>
