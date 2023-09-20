@@ -1,13 +1,13 @@
 <!-- Loop over each object in the projects array -->
 {{#each blogPosts as |blogPost| }}
-<div>dashboard</div>
+
 <div class="card" style="width: 20 rem;">
   <div class="card-body">
-    <h5 class="card-title">{{blogPost.title}}</h5>
+    <h1 class="card-title">{{blogPost.title}}</h1>
     <h6 class="card-subtitle mb-2 text-muted">{{blogPost.user.name}} on {{format_date date_created}}</h6>
     <p class="card-text">{{blogPost.description}}</p>
     <button class="btn btn-primary">Edit</button>
-</div>
+  </div>
 </div>
 
 </div>
@@ -15,6 +15,5 @@
 {{/each}}
 
 <div class="card" style="width: 20 rem;">
-  
-    <a href="/newblog" class="btn btn-primary">New Blog Post</a>
-  </div>
+  <a href="/newblog" class="btn btn-primary">New Blog Post</a>
+</div>

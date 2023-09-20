@@ -41,36 +41,37 @@ router.get('/newblog', withAuth, async (req, res) => {
     const newBlogPost = await BlogPost.findAll();
 
     // Serialize data so the template can read it
-    const blogs = newBlogPost.map((project) => project.get({ plain: true }));
+    const blogs = newBlogPost.map((post) => post.get({ plain: true }));
 
     // Pass serialized data and session flag into template
-    res.render('newblog', { 
-      blogs, 
-      logged_in: req.session.logged_in 
+    res.render('newblog', {
+      blogs,
+      logged_in: req.session.logged_in
     });
   } catch (err) {
     res.status(500).json(err);
   }
 });
+
 // post for newblog
-router.post('newblog', withAuth, async (req, res) => {
+router.post('/newblog', async (req, res) => {
   try {
     const newBP = await BlogPost.create(
       {
-        title: req.body.name,
-        description: req.body.post,
-        user_id: req.session.user_id,
+          title: req.body.post,
+          description: req.body.desc,
+          user_id: req.session.user_id,
       },
     );
     if (!newBP) {
-      res.status(404).json({ message: "Unable to create blogpost"})
+      res.status(404).json({ message: "Unable to create blogpost" })
       return;
     }
     res.status(200).json(newBP);
   } catch (err) {
     res.status(500).json(err);
   }
-})
+});
 
 
 // render homepage
@@ -124,7 +125,7 @@ router.get("/blogPost/:id", withAuth, async (req, res) => {
     });
 
     const blogPost = blogPostData.get({ plain: true });
-    console.log(blogPost);
+    // console.log(blogPost);
 
     res.render("blogPost", {
       ...blogPost,
@@ -153,10 +154,15 @@ router.get("/dashboard", withAuth, async (req, res) => {
           model: Comment,
         },
       ],
+      where: [
+        {
+          user_id: req.session.user_id,
+        },
+      ],
     });
 
     const user = userData.get({ plain: true });
-    console.log(user)
+    // console.log(user)
 
     res.render("dashboard", {
       ...user,
@@ -168,28 +174,10 @@ router.get("/dashboard", withAuth, async (req, res) => {
 });
 
 // NEW POST PAGE: Renders 'create.handlebars'; redirects to /login if not logged in
-router.get("/comment", async (req, res) => {
+router.get("/comment/:id", withAuth, async (req, res) => {
   try {
-    if (req.session.logged_in) {
-      res.render("comment", {
-        logged_in: req.session.logged_in,
-        userId: req.session.user_id,
-      });
-      return;
-    } else {
-      res.redirect("/login");
-    }
-  } catch (err) {
-    console.log(err);
-    res.status(500).json(err);
-  }
-});
-
-// Route set up to be able to edit an existing blog post
-router.get("/comment/:id", async (req, res) => {
-  try {
-    const blogPostData = await BlogPost.findByPk(req.params.id, {
-      // Join user data and comment data with blog post data
+    // Get all blogPosts and JOIN with user data and comment data
+    const blogPostData = await BlogPost.findAll({
       include: [
         {
           model: User,
@@ -197,29 +185,50 @@ router.get("/comment/:id", async (req, res) => {
         },
         {
           model: Comment,
-          include: [User],
+          attributes: ["comment_body"],
+        },
+      ],
+      where: [
+        {
+          id: req.params.id,
         },
       ],
     });
 
-    const blogPost = blogPostData.get({ plain: true });
-    console.log(blogPost);
-
-    if (req.session.logged_in) {
-      res.render("edit", {
-        ...blogPost,
-        logged_in: req.session.logged_in,
-        userId: req.session.user_id,
-      });
-      return;
-    } else {
-      res.redirect("/login");
-    }
+    // Serialize data so the template can read it
+    const blogPosts = blogPostData.map((blogPost) =>
+      blogPost.get({ plain: true })
+    );
+    const user_id = req.session.user_id
+console.log(blogPosts)
+    // Pass serialized data and session flag into template
+    res.render("comment", {
+      blogPosts,
+      user_id,
+      logged_in: req.session.logged_in,
+    });
   } catch (err) {
     console.log(err);
     res.status(500).json(err);
   }
 });
+
+// Route set up to be able to edit an existing blog post
+// router.get("/comment/:id", async (req, res) => {
+//   try {
+//     const blogPostData = await BlogPost.findByPk(req.params.id, {
+//       // Join user data and comment data with blog post data
+//       include: [
+//         {
+//           model: User,
+//           attributes: ["name"],
+//         },
+//         {
+//           model: Comment,
+//           include: [User],
+//         },
+//       ],
+//     });
 
 router.all("/login", (req, res) => {
   // If the user is already logged in, redirect the request to another route
@@ -229,6 +238,23 @@ router.all("/login", (req, res) => {
   }
 
   res.render("login");
+});
+
+//post to comment
+router.post("/comment/:id", async (req, res) => {
+  console.log('inside')
+  try {
+    const comment = await Comment.create({
+      comment_body: req.body.post,
+      blogPost_id: req.params.id,
+      user_id: req.session.user_id
+    });
+
+    res.status(200).json(comment);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json(err);
+  }
 });
 
 // Export

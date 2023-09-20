@@ -18,7 +18,7 @@ BlogPost.init(
       allowNull: false,
     },
     description: {
-      type: DataTypes.TEXT,
+      type: DataTypes.STRING,
     },
     date_created: {
       type: DataTypes.DATE,

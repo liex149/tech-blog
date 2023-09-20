@@ -5,7 +5,7 @@ const withAuth = require("../../utils/auth");
 
 // Route to create a new blog post
 router.post("/", withAuth, async (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
   try {
     const newBlogPost = await BlogPost.create({
       ...req.body,
@@ -21,7 +21,7 @@ router.post("/", withAuth, async (req, res) => {
 
 // Route to edit an existing blog post
 router.put("/:id", withAuth, async (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
   try {
     const blogPostData = await BlogPost.update(req.body, {
       where: {
@@ -42,7 +42,7 @@ router.put("/:id", withAuth, async (req, res) => {
 
 // Route to delete an existing blog post
 router.delete("/:id", withAuth, async (req, res) => {
-  console.log(req.params.id);
+  // console.log(req.params.id);
   try {
     const blogPostData = await BlogPost.destroy({
       where: {

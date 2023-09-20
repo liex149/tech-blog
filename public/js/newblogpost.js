@@ -1,17 +1,15 @@
-const commentFormHandler = async (event) => {
+const blogFormHandler = async (event) => {
     event.preventDefault();
 
-    const post = document.querySelector('#newblog').value.trim();
 
-    const newblog_id = document.querySelector('#newblog_id').value.trim();
-    
+    const post = document.querySelector('#newblog').value.trim();
+    const desc = document.querySelector('#desc').value.trim();
+
     if (post) {
         const response = await fetch('/newblog', {
             method: 'POST',
-            body: JSON.stringify({ post, newblog_id}),
-            headers: {
-                'Content_Type': 'application/json',
-            }
+            body: JSON.stringify({ post, desc }),
+            headers: {'Content-Type': 'application/json' },
         });
 
         if (response.ok) {
@@ -20,10 +18,9 @@ const commentFormHandler = async (event) => {
             alert('Failed to create!')
         }
     }
-
 };
 
 
 document
 .querySelector('.newblog-form')
-.addEventListener('submit', commentFormHandler);
+.addEventListener('submit', blogFormHandler);
