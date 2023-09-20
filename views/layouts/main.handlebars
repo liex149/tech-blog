@@ -11,12 +11,12 @@
 </head>
 
 <body>
-  <div class="flex-column justify-space-around">
-    <header class="display-flex justify-space-between align-center p-2">
-      <h1>
+  <div class="flex-column justify-space-around ">
+    <header class="p-2d-flex justify-content-center text-center p-3 mb-2 bg-light text-dark">
+      <h1 >
         <a href="/">TechBlog!</a>
-      </h1>
-      <nav>
+      </h1 >
+      <nav >
         <!-- Conditionally render login or logout links -->
         {{#if logged_in}}
         <a href="/homepage">Homepage</a> |
@@ -28,7 +28,7 @@
         {{/if}}
       </nav>
     </header>
-    <main class="container container-fluid mt-5">
+    <main class="container container-fluid mt-5 p-3 mb-2 bg-light text-dark"">
       <!-- Render the sub layout -->
       {{{ body }}}
     </main>

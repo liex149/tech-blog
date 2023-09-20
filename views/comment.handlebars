@@ -1,27 +1,41 @@
-{{#each blogPosts as |blogPost| }}
+{{#each postData as |blogPost| }}
 
-<div class="card" style="width: 18rem;">
+<div class="card" style="width: 18 rem;" id="{{blogPost.id}}">
   <div class="card-body">
-    <h5 class="card-title">{{blogPost.title}}</h5>
-    <div id="bpid">"{{blogPost.id}}"</div>
+    <h5 class="card-title card-header">{{blogPost.title}}</h5>
     <h6 class="card-subtitle mb-2 text-muted">{{blogPost.user.name}} on {{format_date date_created}}</h6>
     <p class="card-text">{{blogPost.description}}</p>
   </div>
 </div>
+{{/each}}
+
+{{#each commentPost as |x|}}
+<div class="card">
+  <div class="card-header">
+    posted by {{x.user.name}} on {{format_date x.date_created}}
+  </div>
+  <div class="card-body">
+    <p class="card-text">{{x.comment_body}}</p>
+  </div>
+</div>
+{{/each}}
 
 
-    <form class="form comment-form">
-      <div class="form-group">
-    
-        <label>Add comment : </label>
-        <textarea class="form-input" type="text" id="comment" name="newblog_id" /></textarea>
-      </div>
-      <div class="form-group">
-        <button type="submit" class="btn btn-primary">Submit</button>
-      </div>
-    </form>
+{{#each postData as |blogPost| }}
+<form class="form comment-form" >
+  <div class="form-group">
+    <label for="comment">Add comment : </label>
+    <textarea class="form-input" type="text" id="comment" name="newblog_id" /></textarea>
+  </div>
+  <div class="form-group">
+    <button type="submit" class="btn btn-primary">Submit</button>
   </div>
 
-  {{/each}}  
+</form>
+</div>
+{{/each}} 
+
+
+
 
 <script src="../js/comment.js"></script>

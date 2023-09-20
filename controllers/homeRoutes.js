@@ -2,7 +2,7 @@
 const router = require("express").Router();
 const { BlogPost, User, Comment } = require("../models");
 const withAuth = require("../utils/auth");
-
+// blogpost
 router.get("/", async (req, res) => {
   try {
     // Get all blogPosts and JOIN with user data and comment data
@@ -58,9 +58,9 @@ router.post('/newblog', async (req, res) => {
   try {
     const newBP = await BlogPost.create(
       {
-          title: req.body.post,
-          description: req.body.desc,
-          user_id: req.session.user_id,
+        title: req.body.post,
+        description: req.body.desc,
+        user_id: req.session.user_id,
       },
     );
     if (!newBP) {
@@ -72,7 +72,6 @@ router.post('/newblog', async (req, res) => {
     res.status(500).json(err);
   }
 });
-
 
 // render homepage
 router.get("/homepage", async (req, res) => {
@@ -173,62 +172,72 @@ router.get("/dashboard", withAuth, async (req, res) => {
   }
 });
 
-// NEW POST PAGE: Renders 'create.handlebars'; redirects to /login if not logged in
+// comment on blog
+router.post("/comment/:id",withAuth, async (req, res) => {
+  // add a comment. Save the user id and blogpost_id
+  try {
+    const comData = await Comment.create(
+      {
+        comment_body: req.body.post,
+        user_id: req.session.user_id,
+        blog_post_id: req.body.bpid,
+      },
+    );
+
+    if (!comData) {
+      res.status(404).json({ message: "No blogpost found with that id!" });
+      return;
+    }
+
+    res.status(200).json(comData);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+// get comment from blogpost
 router.get("/comment/:id", withAuth, async (req, res) => {
   try {
-    // Get all blogPosts and JOIN with user data and comment data
-    const blogPostData = await BlogPost.findAll({
-      include: [
-        {
-          model: User,
-          attributes: ["name"],
-        },
-        {
-          model: Comment,
-          attributes: ["comment_body"],
-        },
-      ],
+    const bpData = await BlogPost.findAll({
+      include: { all: true, nested: true },
       where: [
         {
           id: req.params.id,
         },
       ],
+
     });
 
-    // Serialize data so the template can read it
-    const blogPosts = blogPostData.map((blogPost) =>
-      blogPost.get({ plain: true })
-    );
-    const user_id = req.session.user_id
-console.log(blogPosts)
-    // Pass serialized data and session flag into template
-    res.render("comment", {
-      blogPosts,
-      user_id,
+    const cData = await Comment.findAll({
+      include:
+      {
+        all: true,
+        nested: true
+      },
+
+      where: 
+      [
+        {
+          blog_post_id: req.params.id,
+        },
+      ],
+    });
+    // serialize data
+    const postData = bpData.map((description) => description.get({ plain: true }));
+    const commentPost = cData.map((comment) => comment.get({ plain: true }));
+
+    res.render('comment', {
+      postData,
+      commentPost,
       logged_in: req.session.logged_in,
     });
   } catch (err) {
-    console.log(err);
     res.status(500).json(err);
   }
 });
 
-// Route set up to be able to edit an existing blog post
-// router.get("/comment/:id", async (req, res) => {
-//   try {
-//     const blogPostData = await BlogPost.findByPk(req.params.id, {
-//       // Join user data and comment data with blog post data
-//       include: [
-//         {
-//           model: User,
-//           attributes: ["name"],
-//         },
-//         {
-//           model: Comment,
-//           include: [User],
-//         },
-//       ],
-//     });
+
+
 
 router.all("/login", (req, res) => {
   // If the user is already logged in, redirect the request to another route
@@ -240,22 +249,7 @@ router.all("/login", (req, res) => {
   res.render("login");
 });
 
-//post to comment
-router.post("/comment/:id", async (req, res) => {
-  console.log('inside')
-  try {
-    const comment = await Comment.create({
-      comment_body: req.body.post,
-      blogPost_id: req.params.id,
-      user_id: req.session.user_id
-    });
 
-    res.status(200).json(comment);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json(err);
-  }
-});
 
 // Export
 module.exports = router;
