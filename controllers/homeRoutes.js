@@ -2,7 +2,7 @@
 const router = require("express").Router();
 const { BlogPost, User, Comment } = require("../models");
 const withAuth = require("../utils/auth");
-// blogpost
+// get route for blogpost
 router.get("/", async (req, res) => {
   try {
     // Get all blogPosts and JOIN with user data and comment data
@@ -268,7 +268,7 @@ router.get("/update/:id", withAuth, async (req, res) => {
 
 //update your own post
 router.put("/update/:id",withAuth, async (req, res) => {
-  // update a blogpost by its `id` value
+ 
   try {
     const blogpostData = await BlogPost.update(
       {
