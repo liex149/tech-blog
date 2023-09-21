@@ -2,7 +2,7 @@
 
 <div class="card" style="width: 18 rem;" id="{{blogPost.id}}">
   <div class="card-body">
-    <h5 class="card-title card-header">{{blogPost.title}}</h5>
+    <h5 class="card-title p-3 mb-2 bg-info text-white">{{blogPost.title}}</h5>
     <h6 class="card-subtitle mb-2 text-muted">{{blogPost.user.name}} on {{format_date date_created}}</h6>
     <p class="card-text">{{blogPost.description}}</p>
   </div>
@@ -11,7 +11,7 @@
 
 {{#each commentPost as |x|}}
 <div class="card">
-  <div class="card-header">
+  <div class="p-3 mb-2 bg-secondary text-white">
     posted by {{x.user.name}} on {{format_date x.date_created}}
   </div>
   <div class="card-body">
