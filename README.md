@@ -56,7 +56,7 @@ THEN I am able to view posts and comments but I am prompted to log in again befo
 MIT
 
 ## Contributing 
-Linh Lien
+This project was created with the help of the mini project and the past homeworks. 
 
 ## Tests 
 NA
