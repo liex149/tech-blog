@@ -236,7 +236,60 @@ router.get("/comment/:id", withAuth, async (req, res) => {
   }
 });
 
+//update by id path
+router.get("/update/:id", withAuth, async (req, res) => {
+  try {
+    const blogpostData = await BlogPost.findAll({
+      include: [
+        {
+          model: User,
+          attributes: ["name"],
+        },
+      ],
+      where: [
+        {
+          id: req.params.id,
+        },
+      ],
+    });
 
+    // Serialize data so the template can read it
+    const blogposts = blogpostData.map((post) => post.get({ plain: true }));
+
+    // Pass serialized data and session flag into template
+    res.render("update", {
+      blogposts,
+      logged_in: req.session.logged_in,
+    });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+//update your own post
+router.put("/update/:id",withAuth, async (req, res) => {
+  // update a blogpost by its `id` value
+  try {
+    const blogpostData = await BlogPost.update(
+      {
+        title: req.body.title,
+        description: req.body.description,
+      },
+      {
+        where: {
+          id: req.params.id,
+        },
+      }
+    );
+    if (!blogpostData) {
+      res.status(404).json({ message: "No blogpost found with that id!" });
+      return;
+    }
+    res.status(200).json(blogpostData);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 
 
 router.all("/login", (req, res) => {
