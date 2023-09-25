@@ -1,5 +1,5 @@
 // Imports
-const User = require("./user");
+const User = require("./User");
 const BlogPost = require("./blogPost");
 const Comment = require("./Comment");
 
